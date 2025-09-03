@@ -1,67 +1,24 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
-project(openmpt VERSION 0.3.7 LANGUAGES CXX)
+project(openmpt VERSION 0.8.3 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(ZLIB REQUIRED)
 
 add_library(${PROJECT_NAME}
   common/BuildSettings.h
-  common/CompilerDetect.h
-  common/ComponentManager.cpp
-  common/ComponentManager.h
-  common/Endianness.h
-  common/FileReader.cpp
-  common/FileReader.h
-  common/FileReaderFwd.h
-  common/FlagSet.h
+  common/BuildSettingsCompiler.h
   common/Logging.cpp
   common/Logging.h
-  common/misc_util.cpp
-  common/misc_util.h
-  common/mptAlloc.cpp
-  common/mptAlloc.h
-  common/mptAssert.h
-  common/mptBaseMacros.h
-  common/mptBaseTypes.h
-  common/mptBaseUtils.h
-  common/mptBufferIO.h
-  common/mptCPU.cpp
-  common/mptCPU.h
-  common/mptCRC.h
-  common/mptException.h
-  common/mptExceptionText.h
-  common/mptFileIO.cpp
-  common/mptFileIO.h
-  common/mptIO.cpp
-  common/mptIO.h
-  common/mptLibrary.cpp
-  common/mptLibrary.h
-  common/mptMemory.h
-  common/mptMutex.h
-  common/mptOS.cpp
-  common/mptOS.h
-  common/mptPathString.cpp
-  common/mptPathString.h
   common/mptRandom.cpp
   common/mptRandom.h
-  common/mptSpan.h
-  common/mptString.cpp
   common/mptString.h
   common/mptStringBuffer.cpp
   common/mptStringBuffer.h
-  common/mptStringFormat.cpp
   common/mptStringFormat.h
-  common/mptStringParse.cpp
-  common/mptStringParse.h
-  common/mptThread.h
   common/mptTime.cpp
   common/mptTime.h
-  common/mptUUID.cpp
-  common/mptUUID.h
-  common/mptWine.cpp
-  common/mptWine.h
-  common/Profiler.cpp
-  common/Profiler.h
   common/serialization_utils.cpp
   common/serialization_utils.h
   common/stdafx.h
@@ -83,79 +40,88 @@ add_library(${PROJECT_NAME}
   libopenmpt/libopenmpt_stream_callbacks_buffer.h
   libopenmpt/libopenmpt_stream_callbacks_fd.h
   libopenmpt/libopenmpt_stream_callbacks_file.h
+  libopenmpt/libopenmpt_stream_callbacks_file_msvcrt.h
   libopenmpt/libopenmpt_version.h
-  soundbase/SampleFormat.h
-  soundbase/SampleFormatConverters.h
-  soundbase/SampleFormatCopy.h
-  sounddsp/AGC.cpp
-  sounddsp/AGC.h
-  sounddsp/DSP.cpp
-  sounddsp/DSP.h
-  sounddsp/EQ.cpp
-  sounddsp/EQ.h
   sounddsp/Reverb.cpp
   sounddsp/Reverb.h
-  soundlib/AudioCriticalSection.cpp
   soundlib/AudioCriticalSection.h
   soundlib/AudioReadTarget.h
   soundlib/BitReader.h
-  soundlib/ChunkReader.h
   soundlib/Container.h
   soundlib/ContainerMMCMP.cpp
   soundlib/ContainerPP20.cpp
   soundlib/ContainerUMX.cpp
   soundlib/ContainerXPK.cpp
-  soundlib/Dither.cpp
-  soundlib/Dither.h
-  soundlib/Dlsbank.cpp
   soundlib/Dlsbank.h
   soundlib/Fastmix.cpp
   soundlib/FloatMixer.h
   soundlib/InstrumentExtensions.cpp
+  soundlib/InstrumentSynth.cpp
+  soundlib/InstrumentSynth.h
   soundlib/IntMixer.h
   soundlib/ITCompression.cpp
   soundlib/ITCompression.h
   soundlib/ITTools.cpp
   soundlib/ITTools.h
+  soundlib/Load_667.cpp
   soundlib/Load_669.cpp
   soundlib/Load_amf.cpp
   soundlib/Load_ams.cpp
   soundlib/Load_c67.cpp
+  soundlib/Load_cba.cpp
   soundlib/Load_dbm.cpp
   soundlib/Load_digi.cpp
   soundlib/Load_dmf.cpp
   soundlib/Load_dsm.cpp
+  soundlib/Load_dsym.cpp
   soundlib/Load_dtm.cpp
+  soundlib/Load_etx.cpp
   soundlib/Load_far.cpp
+  soundlib/Load_fc.cpp
+  soundlib/Load_fmt.cpp
+  soundlib/Load_ftm.cpp
   soundlib/Load_gdm.cpp
+  soundlib/Load_gmc.cpp
+  soundlib/Load_gt2.cpp
+  soundlib/Load_ice.cpp
   soundlib/Load_imf.cpp
+  soundlib/Load_ims.cpp
   soundlib/Load_it.cpp
   soundlib/Load_itp.cpp
   soundlib/load_j2b.cpp
+  soundlib/Load_kris.cpp
   soundlib/Load_mdl.cpp
   soundlib/Load_med.cpp
-  soundlib/Load_mid.cpp
   soundlib/Load_mo3.cpp
   soundlib/Load_mod.cpp
   soundlib/Load_mt2.cpp
   soundlib/Load_mtm.cpp
+  soundlib/Load_mus_km.cpp
   soundlib/Load_okt.cpp
   soundlib/Load_plm.cpp
   soundlib/Load_psm.cpp
+  soundlib/Load_pt36.cpp
   soundlib/Load_ptm.cpp
+  soundlib/Load_puma.cpp
+  soundlib/Load_rtm.cpp
   soundlib/Load_s3m.cpp
   soundlib/Load_sfx.cpp
+  soundlib/Load_stk.cpp
   soundlib/Load_stm.cpp
   soundlib/Load_stp.cpp
-  soundlib/Load_uax.cpp
+  soundlib/Load_symmod.cpp
+  soundlib/Load_tcb.cpp
   soundlib/Load_ult.cpp
-  soundlib/Load_wav.cpp
+  soundlib/Load_unic.cpp
   soundlib/Load_xm.cpp
+  soundlib/Load_xmf.cpp
   soundlib/Loaders.h
   soundlib/Message.cpp
   soundlib/Message.h
   soundlib/MIDIEvents.cpp
   soundlib/MIDIEvents.h
+  soundlib/MIDIMacroParser.cpp
+  soundlib/MIDIMacroParser.h
   soundlib/MIDIMacros.cpp
   soundlib/MIDIMacros.h
   soundlib/Mixer.h
@@ -181,6 +147,8 @@ add_library(${PROJECT_NAME}
   soundlib/ModSequence.h
   soundlib/modsmp_ctrl.cpp
   soundlib/modsmp_ctrl.h
+  soundlib/MODTools.cpp
+  soundlib/MODTools.h
   soundlib/MPEGFrame.cpp
   soundlib/MPEGFrame.h
   soundlib/OggStream.cpp
@@ -194,6 +162,8 @@ add_library(${PROJECT_NAME}
   soundlib/patternContainer.h
   soundlib/Paula.cpp
   soundlib/Paula.h
+  soundlib/PlayState.cpp
+  soundlib/PlayState.h
   soundlib/plugins/DigiBoosterEcho.cpp
   soundlib/plugins/DigiBoosterEcho.h
   soundlib/plugins/dmo/Chorus.cpp
@@ -202,8 +172,8 @@ add_library(${PROJECT_NAME}
   soundlib/plugins/dmo/Compressor.h
   soundlib/plugins/dmo/Distortion.cpp
   soundlib/plugins/dmo/Distortion.h
-  soundlib/plugins/dmo/DMOPlugin.cpp
-  soundlib/plugins/dmo/DMOPlugin.h
+  soundlib/plugins/dmo/DMOUtils.cpp
+  soundlib/plugins/dmo/DMOUtils.h
   soundlib/plugins/dmo/Echo.cpp
   soundlib/plugins/dmo/Echo.h
   soundlib/plugins/dmo/Flanger.cpp
@@ -224,19 +194,25 @@ add_library(${PROJECT_NAME}
   soundlib/plugins/PluginStructs.h
   soundlib/plugins/PlugInterface.cpp
   soundlib/plugins/PlugInterface.h
+  soundlib/plugins/SymMODEcho.cpp
+  soundlib/plugins/SymMODEcho.h
   soundlib/Resampler.h
   soundlib/RowVisitor.cpp
   soundlib/RowVisitor.h
   soundlib/S3MTools.cpp
   soundlib/S3MTools.h
+  soundlib/SampleCopy.h
+  soundlib/SampleFormatBRR.cpp
   soundlib/SampleFormatFLAC.cpp
   soundlib/SampleFormatMediaFoundation.cpp
   soundlib/SampleFormatMP3.cpp
   soundlib/SampleFormatOpus.cpp
   soundlib/SampleFormats.cpp
+  soundlib/SampleFormatSFZ.cpp
   soundlib/SampleFormatVorbis.cpp
   soundlib/SampleIO.cpp
   soundlib/SampleIO.h
+  soundlib/SampleNormalize.h
   soundlib/Snd_defs.h
   soundlib/Snd_flt.cpp
   soundlib/Snd_fx.cpp
@@ -249,9 +225,10 @@ add_library(${PROJECT_NAME}
   soundlib/Tables.h
   soundlib/Tagging.cpp
   soundlib/Tagging.h
+  soundlib/TinyFFT.cpp
+  soundlib/TinyFFT.h
   soundlib/tuning.cpp
   soundlib/tuning.h
-  soundlib/tuningbase.cpp
   soundlib/tuningbase.h
   soundlib/tuningCollection.cpp
   soundlib/tuningcollection.h
@@ -264,10 +241,199 @@ add_library(${PROJECT_NAME}
   soundlib/WindowedFIR.h
   soundlib/XMTools.cpp
   soundlib/XMTools.h
+  src/mpt/arch/arch.hpp
+  src/mpt/arch/feature_fence.hpp
+  src/mpt/arch/feature_flags.hpp
+  src/mpt/arch/x86_amd64.hpp
+  src/mpt/audio/sample.hpp
+  src/mpt/audio/span.hpp
+  src/mpt/base/algorithm.hpp
+  src/mpt/base/aligned_array.hpp
+  src/mpt/base/alloc.hpp
+  src/mpt/base/arithmetic_shift.hpp
+  src/mpt/base/array.hpp
+  src/mpt/base/bit.hpp
+  src/mpt/base/check_platform.hpp
+  src/mpt/base/compiletime_warning.hpp
+  src/mpt/base/constexpr_throw.hpp
+  src/mpt/base/debugging.hpp
+  src/mpt/base/detect.hpp
+  src/mpt/base/detect_arch.hpp
+  src/mpt/base/detect_compiler.hpp
+  src/mpt/base/detect_libc.hpp
+  src/mpt/base/detect_libcxx.hpp
+  src/mpt/base/detect_os.hpp
+  src/mpt/base/detect_quirks.hpp
+  src/mpt/base/float.hpp
+  src/mpt/base/integer.hpp
+  src/mpt/base/macros.hpp
+  src/mpt/base/math.hpp
+  src/mpt/base/memory.hpp
+  src/mpt/base/namespace.hpp
+  src/mpt/base/numbers.hpp
+  src/mpt/base/numeric.hpp
+  src/mpt/base/pointer.hpp
+  src/mpt/base/preprocessor.hpp
+  src/mpt/base/saturate_cast.hpp
+  src/mpt/base/saturate_round.hpp
+  src/mpt/base/secure.hpp
+  src/mpt/base/semantic_version.hpp
+  src/mpt/base/size.hpp
+  src/mpt/base/source_location.hpp
+  src/mpt/base/span.hpp
+  src/mpt/base/tests/tests_base_arithmetic_shift.hpp
+  src/mpt/base/tests/tests_base_bit.hpp
+  src/mpt/base/tests/tests_base_math.hpp
+  src/mpt/base/tests/tests_base_numeric.hpp
+  src/mpt/base/tests/tests_base_saturate_cast.hpp
+  src/mpt/base/tests/tests_base_saturate_round.hpp
+  src/mpt/base/tests/tests_base_wrapping_divide.hpp
+  src/mpt/base/type_traits.hpp
+  src/mpt/base/utility.hpp
+  src/mpt/base/version.hpp
+  src/mpt/base/wrapping_divide.hpp
+  src/mpt/binary/base64.hpp
+  src/mpt/binary/base64url.hpp
+  src/mpt/binary/hex.hpp
+  src/mpt/binary/tests/tests_binary.hpp
+  src/mpt/check/compiler.hpp
+  src/mpt/check/libc.hpp
+  src/mpt/check/libcxx.hpp
+  src/mpt/check/mfc.hpp
+  src/mpt/check/windows.hpp
+  src/mpt/crc/crc.hpp
+  src/mpt/crc/tests/tests_crc.hpp
+  src/mpt/detect/dl.hpp
+  src/mpt/detect/ltdl.hpp
+  src/mpt/detect/mfc.hpp
+  src/mpt/detect/nlohmann_json.hpp
+  src/mpt/endian/floatingpoint.hpp
+  src/mpt/endian/int24.hpp
+  src/mpt/endian/integer.hpp
+  src/mpt/endian/tests/tests_endian_floatingpoint.hpp
+  src/mpt/endian/tests/tests_endian_int24.hpp
+  src/mpt/endian/tests/tests_endian_integer.hpp
+  src/mpt/endian/type_traits.hpp
+  src/mpt/environment/environment.hpp
+  src/mpt/exception/exception.hpp
+  src/mpt/exception/exception_text.hpp
+  src/mpt/exception/logic_error.hpp
+  src/mpt/exception/runtime_error.hpp
+  src/mpt/format/concat.hpp
+  src/mpt/format/default_floatingpoint.hpp
+  src/mpt/format/default_formatter.hpp
+  src/mpt/format/default_integer.hpp
+  src/mpt/format/default_string.hpp
+  src/mpt/format/helpers.hpp
+  src/mpt/format/join.hpp
+  src/mpt/format/message.hpp
+  src/mpt/format/message_macros.hpp
+  src/mpt/format/simple.hpp
+  src/mpt/format/simple_floatingpoint.hpp
+  src/mpt/format/simple_integer.hpp
+  src/mpt/format/simple_spec.hpp
+  src/mpt/format/tests/tests_format_message.hpp
+  src/mpt/format/tests/tests_format_simple.hpp
+  src/mpt/io/base.hpp
+  src/mpt/io/io.hpp
+  src/mpt/io/io_span.hpp
+  src/mpt/io/io_stdstream.hpp
+  src/mpt/io/io_virtual_wrapper.hpp
+  src/mpt/io/tests/tests_io.hpp
+  src/mpt/io_file/fileref.hpp
+  src/mpt/io_file/fstream.hpp
+  src/mpt/io_file/inputfile.hpp
+  src/mpt/io_file/outputfile.hpp
+  src/mpt/io_file_adapter/fileadapter.hpp
+  src/mpt/io_file_read/inputfile_filecursor.hpp
+  src/mpt/io_file_unique/unique_basename.hpp
+  src/mpt/io_file_unique/unique_tempfilename.hpp
+  src/mpt/io_read/callbackstream.hpp
+  src/mpt/io_read/filecursor.hpp
+  src/mpt/io_read/filecursor_callbackstream.hpp
+  src/mpt/io_read/filecursor_filename_traits.hpp
+  src/mpt/io_read/filecursor_memory.hpp
+  src/mpt/io_read/filecursor_stdstream.hpp
+  src/mpt/io_read/filecursor_traits_filedata.hpp
+  src/mpt/io_read/filecursor_traits_memory.hpp
+  src/mpt/io_read/filedata.hpp
+  src/mpt/io_read/filedata_base.hpp
+  src/mpt/io_read/filedata_base_buffered.hpp
+  src/mpt/io_read/filedata_base_seekable.hpp
+  src/mpt/io_read/filedata_base_unseekable.hpp
+  src/mpt/io_read/filedata_base_unseekable_buffer.hpp
+  src/mpt/io_read/filedata_callbackstream.hpp
+  src/mpt/io_read/filedata_memory.hpp
+  src/mpt/io_read/filedata_stdstream.hpp
+  src/mpt/io_read/filereader.hpp
+  src/mpt/io_write/buffer.hpp
+  src/mpt/mutex/mutex.hpp
+  src/mpt/osinfo/class.hpp
+  src/mpt/osinfo/dos_memory.hpp
+  src/mpt/osinfo/dos_version.hpp
+  src/mpt/osinfo/windows_version.hpp
+  src/mpt/osinfo/windows_wine_version.hpp
+  src/mpt/out_of_memory/out_of_memory.hpp
+  src/mpt/parse/parse.hpp
+  src/mpt/parse/split.hpp
+  src/mpt/parse/tests/tests_parse.hpp
+  src/mpt/path/basic_path.hpp
+  src/mpt/path/native_path.hpp
+  src/mpt/path/os_path.hpp
+  src/mpt/path/os_path_long.hpp
+  src/mpt/path/path.hpp
+  src/mpt/random/any_engine.hpp
+  src/mpt/random/crand.hpp
+  src/mpt/random/default_engines.hpp
+  src/mpt/random/device.hpp
+  src/mpt/random/engine.hpp
+  src/mpt/random/engine_lcg.hpp
+  src/mpt/random/random.hpp
+  src/mpt/random/seed.hpp
+  src/mpt/random/tests/tests_random.hpp
+  src/mpt/string/buffer.hpp
+  src/mpt/string/tests/tests_string_buffer.hpp
+  src/mpt/string/tests/tests_string_utility.hpp
+  src/mpt/string/types.hpp
+  src/mpt/string/utility.hpp
+  src/mpt/string_transcode/macros.hpp
+  src/mpt/string_transcode/tests/tests_string_transcode.hpp
+  src/mpt/string_transcode/transcode.hpp
+  src/mpt/system_error/system_error.hpp
+  src/mpt/uuid/guid.hpp
+  src/mpt/uuid/tests/tests_uuid.hpp
+  src/mpt/uuid/uuid.hpp
+  src/openmpt/all/BuildSettings.hpp
+  src/openmpt/all/PlatformFixes.hpp
+  src/openmpt/base/Endian.hpp
+  src/openmpt/base/FlagSet.hpp
+  src/openmpt/base/Int24.hpp
+  src/openmpt/base/Types.hpp
+  src/openmpt/fileformat_base/magic.hpp
+  src/openmpt/logging/Logger.hpp
+  src/openmpt/random/ModPlug.hpp
+  src/openmpt/soundbase/Copy.hpp
+  src/openmpt/soundbase/CopyMix.hpp
+  src/openmpt/soundbase/Dither.hpp
+  src/openmpt/soundbase/DitherModPlug.hpp
+  src/openmpt/soundbase/DitherNone.hpp
+  src/openmpt/soundbase/DitherSimple.hpp
+  src/openmpt/soundbase/MixSample.hpp
+  src/openmpt/soundbase/MixSampleConvert.hpp
+  src/openmpt/soundbase/SampleClip.hpp
+  src/openmpt/soundbase/SampleClipFixedPoint.hpp
+  src/openmpt/soundbase/SampleConvert.hpp
+  src/openmpt/soundbase/SampleConvertFixedPoint.hpp
+  src/openmpt/soundbase/SampleDecode.hpp
+  src/openmpt/soundbase/SampleEncode.hpp
+  src/openmpt/soundbase/SampleFormat.hpp
+  src/openmpt/soundfile_data/tags.hpp
+  src/openmpt/soundfile_data/wav.hpp
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE . include common build/svn_version ${ZLIB_INCLUDE_DIR})
-target_compile_definitions(${PROJECT_NAME} PRIVATE LIBOPENMPT_BUILD MPT_PACKAGE MPT_WITH_ZLIB)
+target_include_directories(${PROJECT_NAME} PRIVATE . src common build/svn_version ${ZLIB_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
+target_compile_definitions(${PROJECT_NAME} PRIVATE LIBOPENMPT_BUILD MPT_WITH_ZLIB)
 
 install(FILES libopenmpt/libopenmpt.h libopenmpt/libopenmpt_config.h libopenmpt/libopenmpt_version.h DESTINATION include/libopenmpt)
 install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION lib)
