@@ -38,4 +38,5 @@ public:
 
 private:
   MPTContext ctx;
+  bool m_surround;
 };
