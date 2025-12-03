@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <setting id="output_mode" type="enum" label="Output Mode" values="Stereo|5.1 Surround" default="0"/>
+</settings>

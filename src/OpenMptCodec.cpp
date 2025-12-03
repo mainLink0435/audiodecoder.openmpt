@@ -34,6 +34,7 @@ extern "C"
 
 CMPTCodec::CMPTCodec(const kodi::addon::IInstanceInfo& instance) : CInstanceAudioDecoder(instance)
 {
+  m_surround = (kodi::addon::GetSettingEnum<int>("output_mode") == 1);
 }
 
 CMPTCodec::~CMPTCodec()
@@ -62,12 +63,21 @@ bool CMPTCodec::Init(const std::string& filename,
   if (!ctx.module)
     return false;
 
-  channels = 2;
+  if (m_surround)
+  {
+    channels = 6;
+    channellist = {AUDIOENGINE_CH_FL, AUDIOENGINE_CH_FR, AUDIOENGINE_CH_FC,
+                   AUDIOENGINE_CH_LFE, AUDIOENGINE_CH_SL, AUDIOENGINE_CH_SR};
+  }
+  else
+  {
+    channels = 2;
+    channellist = {AUDIOENGINE_CH_FL, AUDIOENGINE_CH_FR};
+  }
   samplerate = 48000;
   bitspersample = 32;
   totaltime = openmpt_module_get_duration_seconds(ctx.module) * 1000;
   format = AUDIOENGINE_FMT_FLOAT;
-  channellist = {AUDIOENGINE_CH_FL, AUDIOENGINE_CH_FR};
   bitrate = samplerate * bitspersample * channels;
 
   return true;
@@ -75,9 +85,16 @@ bool CMPTCodec::Init(const std::string& filename,
 
 int CMPTCodec::ReadPCM(uint8_t* buffer, size_t size, size_t& actualsize)
 {
-  if ((actualsize = openmpt_module_read_interleaved_float_stereo(ctx.module, 48000, size / 8,
-                                                                 (float*)buffer) *
-                    8) == size)
+  if (m_surround)
+  {
+    if ((actualsize = openmpt_module_read_interleaved_float_5point1(
+             ctx.module, 48000, size / 24, (float*)buffer) *
+         24) == size)
+      return AUDIODECODER_READ_SUCCESS;
+  }
+  else if ((actualsize = openmpt_module_read_interleaved_float_stereo(
+                ctx.module, 48000, size / 8, (float*)buffer) *
+            8) == size)
     return AUDIODECODER_READ_SUCCESS;
 
   return AUDIODECODER_READ_EOF;
