@@ -12,10 +12,18 @@ set(SOURCES src/OpenMptCodec.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 
-# 4. Explicitly link the OpenMPT library and system math/zlib
-# This uses the exact path passed from tasks.json
-target_link_libraries(${PROJECT_NAME} ${OPENMPT_LIBRARY} m)
-
-# 5. Set the RPATH so it finds the library in the same folder
-set_target_properties(${PROJECT_NAME} PROPERTIES 
-                       LINK_FLAGS "-Wl,-rpath,'$ORIGIN'")
+# 4. Smart Linking Logic
+# If we are building for Android, we add 'log' and link statically via the task.json path
+if(ANDROID)
+    # This tells the NDK to link the C++ library statically
+    # It resolves the "missing symbol" error for std::string and other traits
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++")
+    
+    # We add 'log' for Android system logging and 'm' for math
+    target_link_libraries(${PROJECT_NAME} ${OPENMPT_LIBRARY} m log)
+else()
+    # Standard Linux/CoreELEC logic remains unchanged
+    target_link_libraries(${PROJECT_NAME} ${OPENMPT_LIBRARY} m)
+    set_target_properties(${PROJECT_NAME} PROPERTIES 
+                           LINK_FLAGS "-Wl,-rpath,'$ORIGIN'")
+endif()
